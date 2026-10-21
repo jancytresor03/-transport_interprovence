@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vérification - Burundi Transport</title>
+
+    <link rel="stylesheet" href="verification-2fa.css">
+</head>
+
+<body>
+
+    <main class="verification-page">
+
+        <!-- PARTIE GAUCHE -->
+        <section class="verification-presentation">
+
+            <div class="presentation-content">
+
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">BT</div>
+
+                    <div class="logo-text">
+                        <strong>Burundi Transport</strong>
+                        <span>Transport interprovincial</span>
+                    </div>
+                </a>
+
+                <div class="presentation-text">
+
+                    <span class="small-title">ESPACE SÉCURISÉ</span>
+
+                    <h1>
+                        Votre sécurité,
+                        <span>notre priorité</span>
+                    </h1>
+
+                    <p>
+                        Une vérification supplémentaire permet
+                        de protéger votre compte Burundi Transport.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- PARTIE DROITE -->
+        <section class="verification-section">
+
+            <div class="verification-container">
+
+                <div class="mobile-logo">BT</div>
+
+                <div class="verification-icon" aria-hidden="true">
+                    ✉
+                </div>
+
+                <span class="verification-label">
+                    DOUBLE AUTHENTIFICATION
+                </span>
+
+                <h2>Vérifiez votre identité</h2>
+
+                <p class="verification-description">
+                    Nous avons envoyé un code de vérification à
+                    votre adresse e-mail. Saisissez le code reçu
+                    pour terminer votre connexion.
+                </p>
+
+                <!-- MESSAGE DE RÉSULTAT -->
+                <div
+                    id="message"
+                    class="message"
+                    role="status"
+                    aria-live="polite"
+                    hidden>
+                </div>
+
+                <!-- FORMULAIRE -->
+                <form id="verificationForm">
+
+                    <div class="form-group">
+
+                        <label for="code">
+                            Code de vérification
+                        </label>
+
+                        <input
+                            type="text"
+                            id="code"
+                            name="code"
+                            placeholder="Ex. : 123456"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            pattern="[0-9]{6}"
+                            maxlength="6"
+                            minlength="6"
+                            required
+                        >
+
+                        <small id="codeError"></small>
+
+                        <p class="code-info">
+                            Le code est valable pendant 5 minutes.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="verifyButton"
+                        class="verification-button">
+                        Vérifier le code
+                    </button>
+
+                </form>
+
+                <div class="security-info">
+                    <span aria-hidden="true">🔒</span>
+                    Ne partagez jamais votre code avec quelqu'un.
+                </div>
+
+                <a href="login.html" class="back-login">
+                    Retour à la connexion
+                </a>
+
+                <a href="index.html" class="back-home">
+                    Retour à l'accueil
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="verification-2fa.js"></script>
+
+</body>
+</html>

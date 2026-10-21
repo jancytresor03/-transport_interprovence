@@ -1,0 +1,381 @@
+/* =========================================
+   VARIABLES DU THEME
+========================================= */
+
+:root {
+
+    --primary: #2c6e9b;
+    --primary-light: #4a8db8;
+    --primary-dark: #1e4d6f;
+
+    --primary-soft: #e8f2f9;
+
+    --accent: #e8b04b;
+    --accent-soft: #fdf6e8;
+
+    --text: #1e2a36;
+    --text-muted: #5f7080;
+    --text-light: #8a9aa8;
+
+    --bg: #f8fafc;
+    --bg-soft: #f1f5f9;
+
+    --surface: #ffffff;
+
+    --border: #e4ebf1;
+    --border-strong: #d0dce6;
+}
+
+
+/* =========================================
+   MODE SOMBRE
+========================================= */
+
+body.dark-mode {
+
+    --bg: #111a22;
+    --bg-soft: #18232d;
+
+    --surface: #1b2935;
+
+    --text: #edf3f7;
+    --text-muted: #a9b8c4;
+    --text-light: #8293a1;
+
+    --border: #2c3c49;
+    --border-strong: #3b4e5c;
+
+    background: var(--bg);
+    color: var(--text);
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+body.dark-mode .sidebar {
+
+    background: #1b2935;
+    border-color: #2c3c49;
+}
+
+
+body.dark-mode .sidebar-logo {
+
+    border-color: #2c3c49;
+}
+
+
+body.dark-mode .sidebar-logo h2 {
+
+    color: #ffffff;
+}
+
+
+body.dark-mode .sidebar-logo span {
+
+    color: #a9b8c4;
+}
+
+
+body.dark-mode .sidebar-nav a {
+
+    color: #a9b8c4;
+}
+
+
+body.dark-mode .sidebar-nav a:hover {
+
+    background: #263744;
+    color: #ffffff;
+}
+
+
+body.dark-mode .sidebar-nav a.active {
+
+    background: var(--primary);
+    color: #ffffff;
+}
+
+
+/* =========================================
+   PROFIL ADMIN SIDEBAR
+========================================= */
+
+body.dark-mode .sidebar-bottom {
+
+    border-color: #2c3c49;
+}
+
+
+body.dark-mode .admin-info strong {
+
+    color: #ffffff;
+}
+
+
+body.dark-mode .admin-info span {
+
+    color: #a9b8c4;
+}
+
+
+body.dark-mode .logout-button {
+
+    background: #263744;
+    color: #a9b8c4;
+}
+
+
+body.dark-mode .logout-button:hover {
+
+    background: #3a2d2d;
+    color: #ff8b8b;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+body.dark-mode .top-header {
+
+    background: #1b2935;
+    border-color: #2c3c49;
+}
+
+
+body.dark-mode .notification-link {
+
+    color: #a9b8c4;
+}
+
+
+body.dark-mode .header-profile strong {
+
+    color: #ffffff;
+}
+
+
+body.dark-mode .header-profile span {
+
+    color: #a9b8c4;
+}
+
+
+/* =========================================
+   BOUTON MENU MOBILE
+========================================= */
+
+body.dark-mode .menu-button {
+
+    color: #ffffff;
+}
+
+
+/* =========================================
+   TEXTES
+========================================= */
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4 {
+
+    color: #ffffff;
+}
+
+
+body.dark-mode p {
+
+    color: #a9b8c4;
+}
+
+
+body.dark-mode .page-heading h1 {
+
+    color: #ffffff;
+}
+
+
+body.dark-mode .page-heading p {
+
+    color: #a9b8c4;
+}
+
+
+/* =========================================
+   CARTES
+========================================= */
+
+body.dark-mode .card,
+body.dark-mode .settings-card,
+body.dark-mode .stat-card,
+body.dark-mode .chart-card,
+body.dark-mode .table-card,
+body.dark-mode .profile-card,
+body.dark-mode .activity-card,
+body.dark-mode .notification-card {
+
+    background: #1b2935;
+    border-color: #2c3c49;
+}
+
+
+/* =========================================
+   INPUTS
+========================================= */
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+
+    background: #263744;
+    color: #ffffff;
+
+    border-color: #3b4e5c;
+}
+
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+
+    color: #8293a1;
+}
+
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+
+    border-color: var(--primary-light);
+}
+
+
+/* =========================================
+   TABLEAUX
+========================================= */
+
+body.dark-mode table {
+
+    color: #edf3f7;
+}
+
+
+body.dark-mode th {
+
+    background: #263744;
+    color: #ffffff;
+
+    border-color: #3b4e5c;
+}
+
+
+body.dark-mode td {
+
+    border-color: #2c3c49;
+}
+
+
+body.dark-mode tbody tr:hover {
+
+    background: #263744;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+body.dark-mode .footer {
+
+    background: #1b2935;
+    border-color: #2c3c49;
+
+    color: #8293a1;
+}
+
+
+/* =========================================
+   BOUTONS SECONDAIRES
+========================================= */
+
+body.dark-mode .btn-secondary {
+
+    background: #263744;
+    border-color: #3b4e5c;
+
+    color: #ffffff;
+}
+
+
+body.dark-mode .btn-secondary:hover {
+
+    background: #314654;
+}
+
+
+/* =========================================
+   MODALES
+========================================= */
+
+body.dark-mode .modal-content {
+
+    background: #1b2935;
+    border-color: #2c3c49;
+}
+
+
+body.dark-mode .modal-header {
+
+    border-color: #2c3c49;
+}
+
+
+body.dark-mode .modal-header h2 {
+
+    color: #ffffff;
+}
+
+
+/* =========================================
+   BADGES / ZONES
+========================================= */
+
+body.dark-mode .empty-state {
+
+    color: #a9b8c4;
+}
+
+
+body.dark-mode .search-box {
+
+    background: #1b2935;
+    border-color: #2c3c49;
+}
+
+
+/* =========================================
+   TRANSITION
+========================================= */
+
+body,
+.sidebar,
+.top-header,
+.settings-card,
+.card,
+.stat-card,
+.chart-card,
+.table-card,
+.profile-card,
+.footer,
+input,
+select,
+textarea {
+
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease;
+}

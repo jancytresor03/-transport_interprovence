@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Burundi Transport - Reservation</title>
+
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="logo">
+            <h2>Burundi Transport</h2>
+        </div>
+
+        <nav class="navigation">
+            <a href="#accueil">Accueil</a>
+            <a href="#services">Services</a>
+            <a href="#apropos">A propos</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="header-buttons">
+            <button class="btn-login" id="btnLogin">
+                Se connecter
+            </button>
+
+            <button class="btn-register" id="btnRegister">
+                Creer un compte
+            </button>
+        </div>
+
+    </header>
+
+
+    <!-- ================= ACCUEIL ================= -->
+
+    <main>
+
+        <section class="hero" id="accueil">
+
+            <div class="hero-content">
+
+                <h1>
+                    Reservez votre place
+                    <span>en toute simplicite</span>
+                </h1>
+
+                <p>
+                    Trouvez un trajet interprovincial au Burundi,
+                    choisissez votre place et effectuez votre rrservation
+                    facilement.
+                </p>
+
+                <button class="btn-main" id="btnStart">
+                    Rechercher un trajet
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= RECHERCHE ================= -->
+
+        <section class="search-section">
+
+            <div class="search-container">
+
+                <h2>Rechercher un trajet</h2>
+
+                <p>
+                    Indiquez votre départ, votre destination et la date
+                    de votre voyage.
+                </p>
+
+                <form id="searchForm">
+
+                    <div class="form-group">
+
+                        <label for="depart">
+                            Départ
+                        </label>
+
+                        <select id="depart" required>
+
+                            <option value="">
+                                Choisir le départ
+                            </option>
+
+                            <option value="Bujumbura">
+                                Bujumbura
+                            </option>
+
+                            <option value="Gitega">
+                                Gitega
+                            </option>
+
+                            <option value="Ngozi">
+                                Ngozi
+                            </option>
+
+                            <option value="Muyinga">
+                                Muyinga
+                            </option>
+
+                            <option value="Bururi">
+                                Bururi
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="destination">
+                            Destination
+                        </label>
+
+                        <select id="destination" required>
+
+                            <option value="">
+                                Choisir la destination
+                            </option>
+
+                            <option value="Bujumbura">
+                                Bujumbura
+                            </option>
+
+                            <option value="Gitega">
+                                Gitega
+                            </option>
+
+                            <option value="Ngozi">
+                                Ngozi
+                            </option>
+
+                            <option value="Muyinga">
+                                Muyinga
+                            </option>
+
+                            <option value="Bururi">
+                                Bururi
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="date">
+                            Date du voyage
+                        </label>
+
+                        <input
+                            type="date"
+                            id="date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="passagers">
+                            Nombre de passagers
+                        </label>
+
+                        <input
+                            type="number"
+                            id="passagers"
+                            min="1"
+                            max="10"
+                            value="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn-search"
+                    >
+                        Rechercher
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SERVICES ================= -->
+
+        <section class="services" id="services">
+
+            <div class="section-title">
+
+                <h2>Nos services</h2>
+
+                <p>
+                    Une solution simple pour organiser vos déplacements
+                    interprovinciaux.
+                </p>
+
+            </div>
+
+
+            <div class="services-container">
+
+                <div class="service-card">
+
+                    <div class="service-icon">
+                        🚌
+                    </div>
+
+                    <h3>Trajets disponibles</h3>
+
+                    <p>
+                        Consultez les trajets disponibles entre
+                        différentes provinces du Burundi.
+                    </p>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-icon">
+                        💺
+                    </div>
+
+                    <h3>Choix de votre place</h3>
+
+                    <p>
+                        Choisissez directement la place que vous
+                        souhaitez occuper dans le bus.
+                    </p>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-icon">
+                        🎫
+                    </div>
+
+                    <h3>Réservation</h3>
+
+                    <p>
+                        Effectuez votre réservation et retrouvez
+                        facilement vos informations de voyage.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= COMMENT ÇA MARCHE ================= -->
+
+        <section class="how-it-works">
+
+            <div class="section-title">
+
+                <h2>Comment ça marche ?</h2>
+
+            </div>
+
+
+            <div class="steps-container">
+
+                <div class="step">
+
+                    <div class="step-number">
+                        1
+                    </div>
+
+                    <h3>Rechercher</h3>
+
+                    <p>
+                        Choisissez votre départ, votre destination
+                        et la date du voyage.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        2
+                    </div>
+
+                    <h3>Choisir</h3>
+
+                    <p>
+                        Consultez les trajets disponibles et choisissez
+                        votre trajet.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        3
+                    </div>
+
+                    <h3>Réserver</h3>
+
+                    <p>
+                        Choisissez votre place et complétez les
+                        informations nécessaires.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        4
+                    </div>
+
+                    <h3>Voyager</h3>
+
+                    <p>
+                        Retrouvez votre réservation et préparez
+                        votre voyage.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= A PROPOS ================= -->
+
+        <section class="about" id="apropos">
+
+            <div class="about-content">
+
+                <h2>À propos de Burundi Transport</h2>
+
+                <p>
+                    Burundi Transport est une plateforme destinée à
+                    faciliter la réservation de places dans les
+                    transports interprovinciaux.
+                </p>
+
+                <p>
+                    Notre objectif est de permettre aux voyageurs de
+                    rechercher un trajet, consulter les disponibilités,
+                    choisir leur place et gérer leurs réservations.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CONTACT ================= -->
+
+        <section class="contact" id="contact">
+
+            <div class="section-title">
+
+                <h2>Contact</h2>
+
+                <p>
+                    Une question concernant votre réservation ?
+                </p>
+
+            </div>
+
+            <div class="contact-info">
+
+                <p>
+                    📞 Téléphone : +257 XX XX XX XX
+                </p>
+
+                <p>
+                    ✉ Email : contact@burunditransport.com
+                </p>
+
+                <p>
+                    📍 Burundi
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <p>
+            © 2026 Burundi Transport - Tous droits réservés.
+        </p>
+
+    </footer>
+
+
+    <script src="index.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Activités - Burundi Transport</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- CSS -->
+	<link rel="stylesheet" href="theme.css">
+
+    <link rel="stylesheet" href="activites.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-logo">
+
+            <div class="logo-icon">
+                <i class="fa-solid fa-bus"></i>
+            </div>
+
+            <div>
+
+                <h2>Burundi Transport</h2>
+
+                <span>Administration</span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-title">
+                MENU PRINCIPAL
+            </p>
+
+
+            <a href="admin-dashboard.html"
+               class="nav-link">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="trajets.html"
+               class="nav-link">
+
+                <i class="fa-solid fa-route"></i>
+
+                <span>Trajets</span>
+
+            </a>
+
+
+            <a href="reservations.html"
+               class="nav-link">
+
+                <i class="fa-solid fa-calendar-check"></i>
+
+                <span>Réservations</span>
+
+            </a>
+
+
+            <a href="utilisateurs.html"
+               class="nav-link">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span>Utilisateurs</span>
+
+            </a>
+
+
+            <a href="statistiques.html"
+               class="nav-link">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Statistiques</span>
+
+            </a>
+
+
+            <p class="nav-title">
+                COMMUNICATION
+            </p>
+
+
+            <a href="notifications.html"
+               class="nav-link">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span>Notifications</span>
+
+            </a>
+
+
+            <a href="activites.html"
+               class="nav-link active">
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                <span>Activités</span>
+
+            </a>
+
+
+            <p class="nav-title">
+                SYSTÈME
+            </p>
+
+
+            <a href="profil.html"
+               class="nav-link">
+
+                <i class="fa-solid fa-user"></i>
+
+                <span>Mon profil</span>
+
+            </a>
+
+
+            <a href="parametres.html"
+               class="nav-link">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <span>Paramètres</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- PROFIL ADMIN -->
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-profile">
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+                <div class="admin-info">
+
+                    <strong>
+                        Administrateur
+                    </strong>
+
+                    <span>
+                        admin@gmail.com
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button class="logout-button"
+                    id="logoutButton">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>
+                    Déconnexion
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================
+         CONTENU PRINCIPAL
+    ========================== -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="top-header">
+
+            <button class="menu-button"
+                    id="menuButton">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <div class="header-right">
+
+                <a href="notifications.html"
+                   class="notification-button">
+
+                    <i class="fa-solid fa-bell"></i>
+
+                    <span class="notification-count"
+                          id="notificationBadge">
+                        0
+                    </span>
+
+                </a>
+
+
+                <div class="header-profile">
+
+                    <div class="header-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Administrateur
+                        </strong>
+
+                        <span>
+                            Administrateur
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================
+             PAGE
+        ========================== -->
+
+        <section class="page-container">
+
+
+            <!-- TITRE -->
+
+            <div class="page-heading">
+
+                <div>
+
+                    <span class="page-label">
+                        SYSTÈME
+                    </span>
+
+                    <h1>
+                        Journal des activités
+                    </h1>
+
+                    <p>
+                        Consultez l'historique des actions effectuées
+                        dans le système.
+                    </p>
+
+                </div>
+
+
+                <button class="refresh-button"
+                        id="refreshButton">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    Actualiser
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =========================
+                 STATISTIQUES
+            ========================== -->
+
+            <div class="activity-stats">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+
+                        <i class="fa-solid fa-list"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Total activités
+                        </span>
+
+                        <strong id="totalActivites">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+
+                        <i class="fa-solid fa-right-to-bracket"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Connexions
+                        </span>
+
+                        <strong id="totalConnexions">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon gold">
+
+                        <i class="fa-solid fa-pen"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Modifications
+                        </span>
+
+                        <strong id="totalModifications">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Suppressions
+                        </span>
+
+                        <strong id="totalSuppressions">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 FILTRES
+            ========================== -->
+
+            <div class="filter-card">
+
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Rechercher une activité..."
+                    >
+
+                </div>
+
+
+                <select id="typeFilter">
+
+                    <option value="tous">
+                        Toutes les activités
+                    </option>
+
+                    <option value="connexion">
+                        Connexion
+                    </option>
+
+                    <option value="ajout">
+                        Ajout
+                    </option>
+
+                    <option value="modification">
+                        Modification
+                    </option>
+
+                    <option value="suppression">
+                        Suppression
+                    </option>
+
+                    <option value="reservation">
+                        Réservation
+                    </option>
+
+                    <option value="utilisateur">
+                        Utilisateur
+                    </option>
+
+                </select>
+
+
+                <select id="userFilter">
+
+                    <option value="tous">
+                        Tous les utilisateurs
+                    </option>
+
+                    <option value="Administrateur">
+                        Administrateur
+                    </option>
+
+                    <option value="Client">
+                        Client
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- =========================
+                 TABLEAU
+            ========================== -->
+
+            <div class="activities-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Historique des activités
+                        </h2>
+
+                        <p id="resultCount">
+                            0 activité
+                        </p>
+
+                    </div>
+
+
+                    <button class="clear-button"
+                            id="clearButton">
+
+                        <i class="fa-solid fa-trash-can"></i>
+
+                        Vider le journal
+
+                    </button>
+
+                </div>
+
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    UTILISATEUR
+                                </th>
+
+                                <th>
+                                    ACTION
+                                </th>
+
+                                <th>
+                                    DESCRIPTION
+                                </th>
+
+                                <th>
+                                    DATE
+                                </th>
+
+                                <th>
+                                    STATUT
+                                </th>
+
+                                <th>
+                                    ACTION
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="activitiesTableBody">
+
+                            <!-- JavaScript -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- MESSAGE VIDE -->
+
+                <div class="empty-state"
+                     id="emptyState">
+
+                    <div class="empty-icon">
+
+                        <i class="fa-regular fa-clock"></i>
+
+                    </div>
+
+                    <h3>
+                        Aucune activité
+                    </h3>
+
+                    <p>
+                        Aucune activité ne correspond
+                        aux critères sélectionnés.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- FOOTER -->
+
+        <footer class="footer">
+
+            <p>
+                © 2026 Burundi Transport. Tous droits réservés.
+            </p>
+
+            <span>
+                Administration
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="theme.js"></script>
+    <script src="activites.js"></script>
+
+</body>
+
+</html>

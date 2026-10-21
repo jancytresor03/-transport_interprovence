@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Créer un compte - Burundi Transport</title>
+
+    <link rel="stylesheet" href="register.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">BT</span>
+            <span>Burundi Transport</span>
+        </a>
+
+        <a href="index.html" class="back-home">
+            ← Retour à l'accueil
+        </a>
+    </header>
+
+    <main class="register-page">
+        <div class="register-container">
+
+            <section class="register-info">
+                <div class="info-content">
+
+                    <div class="bus-icon">🚌</div>
+
+                    <h1>Bienvenue sur Burundi Transport</h1>
+
+                    <p>
+                        Créez votre compte et profitez d'une réservation
+                        simple et rapide pour vos voyages interprovinciaux.
+                    </p>
+
+                    <div class="advantages">
+                        <div class="advantage">
+                            <span>✓</span>
+                            <p>Recherchez vos trajets facilement</p>
+                        </div>
+
+                        <div class="advantage">
+                            <span>✓</span>
+                            <p>Choisissez votre siège</p>
+                        </div>
+
+                        <div class="advantage">
+                            <span>✓</span>
+                            <p>Gérez vos réservations</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="register-form-section">
+                <div class="register-card">
+
+                    <div class="form-header">
+                        <h2>Créer un compte</h2>
+                        <p>Remplissez les informations ci-dessous</p>
+                    </div>
+
+                    <form
+                        id="registerForm"
+                        action="inscription.php"
+                        method="POST"
+                    >
+
+                        <div class="form-group">
+                            <label for="nom">Nom</label>
+
+                            <input
+                                type="text"
+                                id="nom"
+                                name="nom"
+                                placeholder="Votre nom"
+                                autocomplete="family-name"
+                                required
+                            >
+
+                            <small class="error-message" id="nomError"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prenom">Prénom</label>
+
+                            <input
+                                type="text"
+                                id="prenom"
+                                name="prenom"
+                                placeholder="Votre prénom"
+                                autocomplete="given-name"
+                                required
+                            >
+
+                            <small class="error-message" id="prenomError"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Adresse e-mail</label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="exemple@email.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                            <small class="error-message" id="emailError"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telephone">Numéro de téléphone</label>
+
+                            <input
+                                type="tel"
+                                id="telephone"
+                                name="telephone"
+                                placeholder="Ex. : 79 00 00 00"
+                                autocomplete="tel"
+                                required
+                            >
+
+                            <small
+                                class="error-message"
+                                id="telephoneError"
+                            ></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+
+                            <div class="password-container">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="mot_de_passe"
+                                    placeholder="Minimum 8 caractères"
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    id="showPassword"
+                                    class="show-password"
+                                >
+                                    Afficher
+                                </button>
+                            </div>
+
+                            <small
+                                class="error-message"
+                                id="passwordError"
+                            ></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">
+                                Confirmer le mot de passe
+                            </label>
+
+                            <div class="password-container">
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmation_mot_de_passe"
+                                    placeholder="Répétez votre mot de passe"
+                                    minlength="8"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    id="showConfirmPassword"
+                                    class="show-password"
+                                >
+                                    Afficher
+                                </button>
+                            </div>
+
+                            <small
+                                class="error-message"
+                                id="confirmPasswordError"
+                            ></small>
+                        </div>
+
+                        <div
+                            id="registerMessage"
+                            class="register-message"
+                        ></div>
+
+                        <button
+                            type="submit"
+                            class="btn-register-submit"
+                        >
+                            Créer mon compte
+                        </button>
+
+                    </form>
+
+                    <div class="login-link">
+                        <p>Vous avez déjà un compte ?</p>
+                        <a href="login.html">Se connecter</a>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Burundi Transport. Tous droits réservés.</p>
+    </footer>
+
+    <script src="registre.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Connexion - Burundi Transport</title>
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <!-- PARTIE GAUCHE -->
+        <section class="login-presentation">
+
+            <div class="presentation-content">
+
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        BT
+                    </div>
+
+                    <div>
+                        <strong>Burundi Transport</strong>
+                        <span>Transport interprovincial</span>
+                    </div>
+                </a>
+
+                <div class="presentation-text">
+
+                    <span class="small-title">
+                        ESPACE SÉCURISÉ
+                    </span>
+
+                    <h1>
+                        Bienvenue sur
+                        <span>Burundi Transport</span>
+                    </h1>
+
+                    <p>
+                        Connectez-vous pour gérer vos réservations
+                        ou accéder à votre espace administrateur.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PARTIE DROITE -->
+        <section class="login-section">
+
+            <div class="login-container">
+
+                <div class="login-header">
+
+                    <div class="mobile-logo">
+                        BT
+                    </div>
+
+                    <span class="login-label">
+                        CONNEXION
+                    </span>
+
+                    <h2>
+                        Se connecter
+                    </h2>
+
+                    <p>
+                        Entrez vos identifiants pour accéder à votre compte.
+                    </p>
+
+                </div>
+
+
+                <!-- MESSAGE D'ERREUR -->
+                <div id="errorMessage" class="message error">
+                    Email ou mot de passe incorrect.
+                </div>
+
+
+                <!-- FORMULAIRE -->
+                <form id="loginForm" action="login.php" method="POST">
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Adresse email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+							name="email"
+                            placeholder="email"
+                            autocomplete="email"
+							 required
+                        >
+
+                        <small id="emailError"></small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <div class="password-label">
+
+                            <label for="password">
+                                Mot de passe
+                            </label>
+
+                            <a href="#" id="forgotPassword">
+                                Mot de passe oublié ?
+                            </a>
+
+                        </div>
+
+                        <div class="password-container">
+
+                            <input
+                                type="password"
+                                id="password"
+								name="password"
+                                placeholder="Votre mot de passe"
+                                autocomplete="current-password"
+								 required
+                            >
+
+                            <button
+                                type="button"
+                                id="showPassword"
+                                class="show-password"
+                            >
+                                Afficher
+                            </button>
+
+                        </div>
+
+                        <small id="passwordError"></small>
+
+                    </div>
+
+
+                    <div class="remember-row">
+
+                        <label class="remember">
+
+                            <input
+                                type="checkbox"
+                                id="remember"
+                            >
+
+                            <span>
+                                Se souvenir de moi
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="login-button"
+                    >
+                        Se connecter
+                    </button>
+
+                </form>
+
+
+                <!-- COMPTE CLIENT -->
+                <div class="register-link">
+
+                    <span>
+                        Vous n'avez pas encore de compte ?
+                    </span>
+
+                    <a href="register.html">
+                        Créer un compte
+                    </a>
+
+                </div>
+
+
+                <!-- COMPTES DE TEST -->
+                <div class="demo-info">
+
+                    <div class="demo-title">
+                        Comptes de démonstration
+                    </div>
+
+                    <div class="demo-account">
+
+                        <strong>Administrateur</strong>
+
+                        <span>
+                            admin@gmail.com
+                        </span>
+
+                        <span>
+                            Mot de passe : admin123
+                        </span>
+
+                    </div>
+
+                    <div class="demo-account">
+
+                        <strong>Client</strong>
+
+                        <span>
+                            client@gmail.com
+                        </span>
+
+                        <span>
+                            Mot de passe : 1234
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <a href="index.html" class="back-home">
+                     Retour a l'accueil
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="login.js"></script>
+
+</body>
+
+</html>
