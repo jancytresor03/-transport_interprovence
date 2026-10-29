@@ -929,5 +929,10 @@ input {
     .footer-content {
         flex-direction: column;
     }
+	
+	
+}
 
+[hidden] {
+    display: none !important;
 }

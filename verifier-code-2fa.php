@@ -7,7 +7,6 @@ header("Content-Type: application/json; charset=UTF-8");
 
 require_once __DIR__ . "/database.php";
 
-
 /* =========================
    REPONSE JSON
 ========================= */
@@ -29,7 +28,6 @@ function repondre(
     exit;
 }
 
-
 /* =========================
    VERIFIER LA METHODE
 ========================= */
@@ -38,17 +36,16 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     repondre(false, "Méthode non autorisée.", 405);
 }
 
-
 /* =========================
-   VERIFIER LA SESSION 2FA
+   VERIFIER LA SESSION TEMPORAIRE
 ========================= */
 
 $userId = $_SESSION["pending_2fa_user_id"] ?? null;
 $debutVerification = $_SESSION["pending_2fa_started"] ?? null;
 
 if (
-    empty($userId) ||
-    !is_string($userId) ||
+    !is_scalar($userId) ||
+    trim((string) $userId) === "" ||
     !is_numeric($debutVerification) ||
     (int) $debutVerification > time() ||
     (time() - (int) $debutVerification) > 300
@@ -65,14 +62,18 @@ if (
     );
 }
 
+$userId = trim((string) $userId);
 
 /* =========================
    VERIFIER LE FORMAT DU CODE
 ========================= */
 
-$code = trim($_POST["code"] ?? "");
+$codeRecu = $_POST["code"] ?? "";
 
-if (!preg_match('/^[0-9]{6}$/', $code)) {
+if (
+    !is_string($codeRecu) ||
+    !preg_match('/^[0-9]{6}$/', $codeRecu)
+) {
     repondre(
         false,
         "Veuillez saisir un code valide de 6 chiffres.",
@@ -80,24 +81,30 @@ if (!preg_match('/^[0-9]{6}$/', $code)) {
     );
 }
 
-
-/* =========================
-   VERIFIER LE CODE EN BASE
-========================= */
+$code = $codeRecu;
 
 try {
+
+    /* =========================
+       DEBUT DE LA TRANSACTION
+    ========================= */
+
     $pdo->beginTransaction();
 
-    /*
-     * Verrouiller la ligne pendant la vérification
-     * pour éviter les mises à jour concurrentes.
-     */
-    $requete = $pdo->prepare(
-        "SELECT code_hash, expires_at, tentatives
-         FROM codes_2fa
-         WHERE user_id = :user_id
-         FOR UPDATE"
-    );
+    /* =========================
+       RECUPERER ET VERROUILLER LE CODE
+    ========================= */
+
+    $requete = $pdo->prepare("
+        SELECT
+            code_hash,
+            expires_at,
+            tentatives,
+            (expires_at <= NOW()) AS code_expire
+        FROM codes_2fa
+        WHERE user_id = :user_id
+        FOR UPDATE
+    ");
 
     $requete->execute([
         "user_id" => $userId
@@ -106,6 +113,7 @@ try {
     $verification = $requete->fetch(PDO::FETCH_ASSOC);
 
     if (!$verification) {
+
         $pdo->commit();
 
         unset(
@@ -120,28 +128,16 @@ try {
         );
     }
 
-
     /* =========================
-       VERIFIER L'EXPIRATION
+       VERIFIER L'EXPIRATION DU CODE
     ========================= */
 
-    $requeteExpiration = $pdo->prepare(
-        "SELECT expires_at <= NOW()
-         FROM codes_2fa
-         WHERE user_id = :user_id"
-    );
+    if ((int) $verification["code_expire"] === 1) {
 
-    $requeteExpiration->execute([
-        "user_id" => $userId
-    ]);
-
-    $expire = (bool) $requeteExpiration->fetchColumn();
-
-    if ($expire) {
-        $suppression = $pdo->prepare(
-            "DELETE FROM codes_2fa
-             WHERE user_id = :user_id"
-        );
+        $suppression = $pdo->prepare("
+            DELETE FROM codes_2fa
+            WHERE user_id = :user_id
+        ");
 
         $suppression->execute([
             "user_id" => $userId
@@ -161,7 +157,6 @@ try {
         );
     }
 
-
     /* =========================
        LIMITER LES TENTATIVES
     ========================= */
@@ -169,10 +164,11 @@ try {
     $tentatives = (int) $verification["tentatives"];
 
     if ($tentatives >= 5) {
-        $suppression = $pdo->prepare(
-            "DELETE FROM codes_2fa
-             WHERE user_id = :user_id"
-        );
+
+        $suppression = $pdo->prepare("
+            DELETE FROM codes_2fa
+            WHERE user_id = :user_id
+        ");
 
         $suppression->execute([
             "user_id" => $userId
@@ -192,9 +188,8 @@ try {
         );
     }
 
-
     /* =========================
-       COMPARER LES CODES
+       COMPARER LE CODE
     ========================= */
 
     $codeHash = hash("sha256", $code);
@@ -204,10 +199,11 @@ try {
         $tentatives++;
 
         if ($tentatives >= 5) {
-            $suppression = $pdo->prepare(
-                "DELETE FROM codes_2fa
-                 WHERE user_id = :user_id"
-            );
+
+            $suppression = $pdo->prepare("
+                DELETE FROM codes_2fa
+                WHERE user_id = :user_id
+            ");
 
             $suppression->execute([
                 "user_id" => $userId
@@ -227,50 +223,48 @@ try {
             );
         }
 
-        $miseAJour = $pdo->prepare(
-            "UPDATE codes_2fa
-             SET tentatives = :tentatives
-             WHERE user_id = :user_id"
-        );
+        $miseAJourTentatives = $pdo->prepare("
+            UPDATE codes_2fa
+            SET tentatives = :tentatives
+            WHERE user_id = :user_id
+        ");
 
-        $miseAJour->execute([
+        $miseAJourTentatives->execute([
             "tentatives" => $tentatives,
             "user_id" => $userId
         ]);
 
         $pdo->commit();
 
-        $restantes = 5 - $tentatives;
-
         repondre(
             false,
             "Code incorrect. Il vous reste "
-                . $restantes
+                . (5 - $tentatives)
                 . " tentative(s).",
             400
         );
     }
 
-
     /* =========================
-       CODE CORRECT :
        REVERIFIER LE COMPTE
     ========================= */
 
-    $requeteUtilisateur = $pdo->prepare(
-        "SELECT
+    $requeteUtilisateur = $pdo->prepare("
+        SELECT
             u.user_id,
             u.nom,
             u.prenom,
             u.email,
             u.role_id,
             u.statut,
+            u.deux_facteurs,
             r.nom AS role_nom
-         FROM users u
-         LEFT JOIN roles r ON u.role_id = r.role_id
-         WHERE u.user_id = :user_id
-         LIMIT 1"
-    );
+        FROM users u
+        LEFT JOIN roles r ON u.role_id = r.role_id
+        WHERE u.user_id = :user_id
+        LIMIT 1
+        FOR UPDATE
+    ");
 
     $requeteUtilisateur->execute([
         "user_id" => $userId
@@ -282,10 +276,11 @@ try {
         !$utilisateur ||
         $utilisateur["statut"] !== "actif"
     ) {
-        $suppression = $pdo->prepare(
-            "DELETE FROM codes_2fa
-             WHERE user_id = :user_id"
-        );
+
+        $suppression = $pdo->prepare("
+            DELETE FROM codes_2fa
+            WHERE user_id = :user_id
+        ");
 
         $suppression->execute([
             "user_id" => $userId
@@ -305,13 +300,20 @@ try {
         );
     }
 
-    $role = strtolower(trim($utilisateur["role_nom"] ?? ""));
+    /* =========================
+       VERIFIER LE ROLE
+    ========================= */
+
+    $role = strtolower(
+        trim($utilisateur["role_nom"] ?? "")
+    );
 
     if (!in_array($role, ["admin", "client"], true)) {
-        $suppression = $pdo->prepare(
-            "DELETE FROM codes_2fa
-             WHERE user_id = :user_id"
-        );
+
+        $suppression = $pdo->prepare("
+            DELETE FROM codes_2fa
+            WHERE user_id = :user_id
+        ");
 
         $suppression->execute([
             "user_id" => $userId
@@ -331,37 +333,95 @@ try {
         );
     }
 
+    /* =========================
+       FORCER LA 2FA POUR LE CLIENT
+    ========================= */
+
+    if (
+        $role === "client" &&
+        (int) $utilisateur["deux_facteurs"] !== 1
+    ) {
+
+        $forcer2FA = $pdo->prepare("
+            UPDATE users
+            SET deux_facteurs = 1
+            WHERE user_id = :user_id
+        ");
+
+        $forcer2FA->execute([
+            "user_id" => $userId
+        ]);
+    }
+
+    /*
+       Pour l'administrateur, conserver le réglage
+       deux_facteurs déjà enregistré.
+    */
 
     /* =========================
        SUPPRIMER LE CODE UTILISE
     ========================= */
 
-    $suppression = $pdo->prepare(
-        "DELETE FROM codes_2fa
-         WHERE user_id = :user_id"
-    );
+    $suppression = $pdo->prepare("
+        DELETE FROM codes_2fa
+        WHERE user_id = :user_id
+    ");
 
     $suppression->execute([
         "user_id" => $userId
     ]);
 
-
     /* =========================
-       METTRE A JOUR LA CONNEXION
+       METTRE A JOUR LA DERNIERE CONNEXION
     ========================= */
 
-    $miseAJourConnexion = $pdo->prepare(
-        "UPDATE users
-         SET derniere_connexion = NOW()
-         WHERE user_id = :user_id"
-    );
+    $miseAJourConnexion = $pdo->prepare("
+        UPDATE users
+        SET derniere_connexion = NOW()
+        WHERE user_id = :user_id
+    ");
 
     $miseAJourConnexion->execute([
         "user_id" => $userId
     ]);
 
-    $pdo->commit();
+    /* =========================
+       ENREGISTRER L'HISTORIQUE
+    ========================= */
 
+    $adresseIP = $_SERVER["REMOTE_ADDR"] ?? null;
+    $navigateur = $_SERVER["HTTP_USER_AGENT"] ?? null;
+
+    $historique = $pdo->prepare("
+        INSERT INTO historique_connexions (
+            user_id,
+            email_saisi,
+            statut,
+            adresse_ip,
+            navigateur,
+            date_connexion
+        ) VALUES (
+            :user_id,
+            :email,
+            'reussie',
+            :adresse_ip,
+            :navigateur,
+            NOW()
+        )
+    ");
+
+    $historique->execute([
+        "user_id" => $utilisateur["user_id"],
+        "email" => $utilisateur["email"],
+        "adresse_ip" => $adresseIP,
+        "navigateur" => $navigateur
+    ]);
+
+    /* =========================
+       VALIDER LES OPERATIONS SQL
+    ========================= */
+
+    $pdo->commit();
 
     /* =========================
        CREER LA SESSION AUTHENTIFIEE
@@ -380,7 +440,6 @@ try {
     $_SESSION["email"] = $utilisateur["email"];
     $_SESSION["role_id"] = $utilisateur["role_id"];
     $_SESSION["role"] = $role;
-
 
     /* =========================
        CONNEXION REUSSIE
@@ -410,4 +469,5 @@ try {
         500
     );
 }
+
 ?>

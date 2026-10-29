@@ -3,6 +3,45 @@
 <?php
 require_once __DIR__ . "/../verification.php";
 verifierAcces("client", "../login.html");
+
+require_once __DIR__ . "/../database.php";
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+$userId = $_SESSION["user_id"] ?? null;
+
+$stmt = $pdo->prepare("
+    SELECT nom, prenom
+    FROM users
+    WHERE user_id = :user_id
+      AND statut = 'actif'
+    LIMIT 1
+");
+
+$stmt->execute(["user_id" => $userId]);
+$clientConnecte = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$clientConnecte) {
+    header("Location: ../logout.php");
+    exit;
+}
+
+$nomComplet = trim(
+    $clientConnecte["prenom"] . " " . $clientConnecte["nom"]
+);
+
+$initiale = mb_strtoupper(
+    mb_substr(
+        $clientConnecte["prenom"] ?: $clientConnecte["nom"],
+        0,
+        1,
+        "UTF-8"
+    ),
+    "UTF-8"
+);
+
 ?>
   
 
@@ -46,6 +85,7 @@ verifierAcces("client", "../login.html");
             <a href="mes-reservations.php">
                 Mes reservations
             </a>
+		    <a href="chat.php">message</a>
 
         </nav>
 
@@ -54,19 +94,18 @@ verifierAcces("client", "../login.html");
 
             <div class="user-menu">
 
-                <button id="userButton" class="user-button">
+                <button    type="button" id="userButton" class="user-button"  aria-expanded="false"
+    aria-controls="userMenu">
 
-                    <span class="user-avatar">
-                        C
-                    </span>
+                   <span class="user-avatar">
+        <?= htmlspecialchars($initiale, ENT_QUOTES, "UTF-8") ?>
+    </span>
 
-                    <span id="userName">
-                        Client
-                    </span>
+    <span id="userName">
+        <?= htmlspecialchars($nomComplet, ENT_QUOTES, "UTF-8") ?>
+    </span>
 
-                    <span class="arrow">
-                        ▾
-                    </span>
+    <span class="arrow">▾</span>
 
                 </button>
 
@@ -590,6 +629,7 @@ verifierAcces("client", "../login.html");
 
 
     <script src="client-home.js"></script>
+	<script src="deconnexion-auto.js"></script>
 
 </body>
 

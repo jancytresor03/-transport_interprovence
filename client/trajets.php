@@ -229,6 +229,7 @@ $paramsRecherche = http_build_query([
                 <a href="client-home.php">Accueil</a>
                 <a href="recherche.php">Rechercher</a>
                 <a href="mes-reservations.php">Mes réservations</a>
+				<a href="chat.php">message</a>
             </nav>
 
             <div class="user-area">
@@ -489,6 +490,7 @@ $paramsRecherche = http_build_query([
     </script>
 
     <script src="trajets.js"></script>
+	<script src="deconnexion-auto.js"></script>
 
 </body>
 </html>

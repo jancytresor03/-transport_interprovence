@@ -102,6 +102,10 @@ require_once __DIR__ . "/../database.php";
                     <i class="fa-solid fa-clock-rotate-left"></i>
                     <span>Activités</span>
                 </a>
+				 <a href="chat.php" class="menu-link">
+                   <i class="fa-solid fa-comments"></i>
+                    <span>Message</span>
+                </a>
 
             </nav>
 
@@ -113,11 +117,34 @@ require_once __DIR__ . "/../database.php";
                     <i class="fa-solid fa-user"></i>
                     <span>Mon profil</span>
                 </a>
+				
+				 <a href="historique-connexions.php" class="menu-link">
+                   <i class="fa-solid fa-shield-halved"></i>
+                    <span>Historique connexion</span>
+                </a>
 
                 <a href="parametres.php" class="menu-link">
                     <i class="fa-solid fa-gear"></i>
                     <span>Paramètres</span>
                 </a>
+				
+				 <a href="documents.php" class="menu-link">
+                <i class="fa-solid fa-folder-open"></i>
+                Documents
+            </a>
+			
+			<a href="partages-documents.php" class="menu-link">
+                     <i class="fa-solid fa-share-nodes"></i>
+                    <span>Partage des documents</span>
+            </a>
+			
+			
+			
+			<a href="documents-partages.php" class="menu-link">
+                   <i class="fa-solid fa-folder-open"></i>
+                        <span>Documents partages</span>
+            </a>
+			
 
                 <a href="archives.php" class="menu-link">
                     <i class="fa-solid fa-box-archive"></i>
@@ -206,15 +233,13 @@ require_once __DIR__ . "/../database.php";
                 <div class="header-admin">
 
                     <div class="header-avatar" id="headerAvatar">
-                        AD
+                           AD
                     </div>
 
                     <div class="header-admin-text">
-                        <strong id="headerAdminName">Administrateur</strong>
-                        <span>Super Admin</span>
+                       <strong id="headerAdminName">Chargement...</strong>
+                       <span id="headerAdminRole">Chargement...</span>
                     </div>
-
-                    <i class="fa-solid fa-chevron-down"></i>
 
                 </div>
 
@@ -568,6 +593,7 @@ require_once __DIR__ . "/../database.php";
 	<script src="notification-badge.js"></script>
     <script src="theme.js"></script>
     <script src="admin-dashboard.js"></script>
+	<script src="header-admin.js"></script>
 
 </body>
 </html>

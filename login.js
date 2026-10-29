@@ -190,8 +190,6 @@ if (forgotPassword) {
     forgotPassword.addEventListener("click", function (event) {
         event.preventDefault();
 
-        alert(
-            "La récupération du mot de passe sera ajoutée dans une prochaine étape."
-        );
+        window.location.href = "mot-de-passe-oublie.html";
     });
 }

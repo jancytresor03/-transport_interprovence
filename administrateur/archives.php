@@ -60,6 +60,17 @@ verifierAcces("admin", "../login.html");
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 Journal des activités
             </a>
+			
+			 <a href="chat.php" class="menu-link">
+                   <i class="fa-solid fa-comments"></i>
+                    <span>Message</span>
+                </a>
+				
+				 <a href="historique-connexions.php" class="menu-link">
+                   <i class="fa-solid fa-shield-halved"></i>
+                    <span>Historique connexion</span>
+                </a>
+			
             <a href="archives.php" class="active">
                 <i class="fa-solid fa-box-archive"></i>
                 Archives
@@ -72,6 +83,8 @@ verifierAcces("admin", "../login.html");
                 <i class="fa-solid fa-gear"></i>
                 Parametres
             </a>
+			
+			
         </nav>
 
         <a href="../logout.php" class="logout">
@@ -87,12 +100,14 @@ verifierAcces("admin", "../login.html");
                 <p>Consultez, recherchez et restaurez les données archivées.</p>
             </div>
 
-            <div class="topbar-right">
-                <span class="admin-badge">
+           
+           <div class="topbar-right">
+               <span class="admin-badge">
                     <i class="fa-solid fa-user-shield"></i>
-                    Administrateur
+                        <span id="topbarAdminName">administrateur</span>
                 </span>
-            </div>
+             </div>
+
         </header>
 
         <section class="stats-grid">
@@ -220,5 +235,6 @@ verifierAcces("admin", "../login.html");
     </div>
     <script src="notification-badge.js"></script>
     <script src="archives.js"></script>
+	<script src="header-admin.js"></script>
 </body>
 </html>

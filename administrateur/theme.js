@@ -1,48 +1,81 @@
-/* =========================================
-   THEME GLOBAL ADMINISTRATEUR
-========================================= */
 
-const CLE_THEME = "burundiTransportParametres";
+"use strict";
 
+/*
+=========================================
+CONFIGURATION
+=========================================
+*/
 
-function obtenirTheme() {
+// theme.js se trouve à la racine du projet.
+// L'API se trouve dans le dossier administrateur.
+const URL_API_PARAMETRES = new URL(
+    "administrateur/parametres-api.php",
+    document.currentScript.src
+).href;
 
-    const parametresSauvegardes =
-        localStorage.getItem(CLE_THEME);
+/*
+=========================================
+APPLIQUER LE THEME
+=========================================
+*/
 
-    if (!parametresSauvegardes) {
-        return "clair";
-    }
-
+async function appliquerThemeGlobal() {
     try {
+        const reponse = await fetch(URL_API_PARAMETRES, {
+            method: "GET",
+            credentials: "same-origin",
+            headers: {
+                "Accept": "application/json"
+            },
+            cache: "no-store"
+        });
 
-        const parametres =
-            JSON.parse(parametresSauvegardes);
+        if (!reponse.ok) {
+            throw new Error(
+                "Erreur HTTP : " + reponse.status
+            );
+        }
 
-        return parametres.theme || "clair";
+        const resultat = await reponse.json();
+
+        if (
+            !resultat.succes ||
+            !resultat.parametres
+        ) {
+            throw new Error(
+                resultat.message || "Paramètres indisponibles."
+            );
+        }
+
+        const theme = resultat.parametres.theme;
+
+        document.body.classList.toggle(
+            "dark-mode",
+            theme === "sombre"
+        );
+
+        console.log("Thème récupéré depuis MySQL :", theme);
 
     } catch (erreur) {
-
-        return "clair";
+        console.error(
+            "Impossible de charger le thème depuis la base de données :",
+            erreur
+        );
     }
 }
 
+/*
+=========================================
+INITIALISATION
+=========================================
+*/
 
-function appliquerThemeGlobal() {
-
-    const theme = obtenirTheme();
-
-    if (theme === "sombre") {
-
-        document.body.classList.add("dark-mode");
-
-    } else {
-
-        document.body.classList.remove("dark-mode");
-    }
+if (document.readyState === "loading") {
+    document.addEventListener(
+        "DOMContentLoaded",
+        appliquerThemeGlobal
+    );
+} else {
+    appliquerThemeGlobal();
 }
-
-
-/* Appliquer le thème dès l'ouverture de la page */
-
-appliquerThemeGlobal();

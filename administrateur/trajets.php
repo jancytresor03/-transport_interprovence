@@ -168,6 +168,11 @@ verifierAcces("admin", "../login.html");
                     <span>Activités</span>
 
                 </a>
+				
+				 <a href="chat.php" class="menu-link">
+                   <i class="fa-solid fa-comments"></i>
+                    <span>Message</span>
+                </a>
 
             </nav>
 
@@ -190,6 +195,16 @@ verifierAcces("admin", "../login.html");
                     <span>Mon profil</span>
 
                 </a>
+				
+				 <a href="historique-connexions.php" class="menu-link">
+                   <i class="fa-solid fa-shield-halved"></i>
+                    <span>Historique connexion</span>
+                </a>
+				
+				 <a href="documents.php" class="menu-link">
+                <i class="fa-solid fa-folder-open"></i>
+                Documents
+            </a>
 
 
                 <a href="parametres.php" class="menu-link">
@@ -198,6 +213,11 @@ verifierAcces("admin", "../login.html");
 
                     <span>Paramètres</span>
 
+                </a>
+				
+				<a href="archives.php" class="menu-link">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>Archives</span>
                 </a>
 
 
@@ -328,29 +348,14 @@ verifierAcces("admin", "../login.html");
 
                 <div class="header-admin">
 
-                    <div class="header-avatar">
+                 <div class="header-avatar" id="headerAvatar">
+    A
+</div>
 
-                        AD
-
-                    </div>
-
-
-                    <div class="header-admin-text">
-
-                        <strong>
-
-                            Administrateur
-
-                        </strong>
-
-
-                        <span>
-
-                            Super Admin
-
-                        </span>
-
-                    </div>
+<div class="header-admin-text">
+    <strong id="headerAdminName">Chargement...</strong>
+    <span id="headerAdminRole">Chargement...</span>
+</div>
 
 
                     <i class="fa-solid fa-chevron-down"></i>
@@ -1211,6 +1216,7 @@ verifierAcces("admin", "../login.html");
     <script src="theme.js"></script>
     <script src="trajets.js"></script>
 	<script src="notification-badge.js"></script>
+	<script src="header-admin.js"></script>
 
 </body>
 

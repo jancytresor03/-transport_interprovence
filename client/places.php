@@ -300,7 +300,7 @@ if ($trajet !== null) {
                 <a href="mes-reservations.php">
                     Mes réservations
                 </a>
-
+                <a href="chat.php">message</a>
             </nav>
 
             <div class="user-area">
@@ -646,6 +646,7 @@ if ($trajet !== null) {
     </script>
 
     <script src="places.js"></script>
+	<script src="deconnexion-auto.js"></script>
 
 </body>
 

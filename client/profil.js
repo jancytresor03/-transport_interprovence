@@ -1,442 +1,480 @@
-// ================= DONNÉES DU CLIENT =================
 
-// Pour le moment les informations sont simulées.
-// Plus tard elles viendront de PHP/MySQL.
-
-let client = {
-
-    nom: "Bryant",
-
-    prenom: "Aarre",
-
-    telephone: "+257 79 00 00 00",
-
-    email: "client@example.com",
-
-    adresse: "Bujumbura"
-
-};
-
+"use strict";
 
 // ================= ÉLÉMENTS HTML =================
 
-const nomInput =
-    document.getElementById("nom");
+const profileForm = document.getElementById("profileForm");
 
-const prenomInput =
-    document.getElementById("prenom");
+const nomInput = document.getElementById("nom");
+const prenomInput = document.getElementById("prenom");
+const telephoneInput = document.getElementById("telephone");
+const emailInput = document.getElementById("email");
+const adresseInput = document.getElementById("adresse");
 
-const telephoneInput =
-    document.getElementById("telephone");
+const nomError = document.getElementById("nomError");
+const prenomError = document.getElementById("prenomError");
+const telephoneError = document.getElementById("telephoneError");
+const emailError = document.getElementById("emailError");
 
-const emailInput =
-    document.getElementById("email");
-
-const adresseInput =
-    document.getElementById("adresse");
-
-
-// ================= AFFICHER LES DONNÉES =================
-
-nomInput.value =
-    client.nom;
-
-prenomInput.value =
-    client.prenom;
-
-telephoneInput.value =
-    client.telephone;
-
-emailInput.value =
-    client.email;
-
-adresseInput.value =
-    client.adresse;
+const profileMessage = document.getElementById("profileMessage");
+const saveProfileButton = document.getElementById("saveProfileButton");
 
 
-// Afficher le nom dans l'en-tête
+// ================= AFFICHAGE DES MESSAGES =================
 
-document.getElementById(
-    "profileName"
-).textContent =
-    client.prenom + " " + client.nom;
+function afficherMessage(element, message, succes = false) {
+    if (!element) {
+        alert(message);
+        return;
+    }
+
+    element.textContent = message;
+    element.hidden = false;
+    element.style.display = "block";
+
+    element.classList.toggle("success-message", succes);
+    element.classList.toggle("error-message", !succes);
+
+    // Compatibilité avec le style actuel de la page.
+    element.style.color = succes ? "green" : "red";
+}
+
+function masquerMessage(element) {
+    if (!element) return;
+
+    element.textContent = "";
+    element.hidden = true;
+    element.style.display = "none";
+}
+
+function effacerErreurs() {
+    if (nomError) nomError.textContent = "";
+    if (prenomError) prenomError.textContent = "";
+    if (telephoneError) telephoneError.textContent = "";
+    if (emailError) emailError.textContent = "";
+
+    masquerMessage(profileMessage);
+}
 
 
-// Afficher l'email
+// ================= LECTURE DE LA RÉPONSE PHP =================
 
-document.getElementById(
-    "profileEmail"
-).textContent =
-    client.email;
+async function lireReponse(reponse) {
+    const texte = await reponse.text();
+
+    let resultat;
+
+    try {
+        resultat = JSON.parse(texte);
+    } catch {
+        throw new Error(
+            "Le serveur n'a pas renvoyé une réponse JSON valide. Vérifiez profil-api.php."
+        );
+    }
+
+    // Ton API utilise "success", et non "succes".
+    if (!reponse.ok || resultat.success !== true) {
+        throw new Error(
+            resultat.message || "Une erreur est survenue."
+        );
+    }
+
+    return resultat;
+}
 
 
-// ================= FORMULAIRE =================
+// ================= VALIDATION DU PROFIL =================
 
-const profileForm =
-    document.getElementById(
-        "profileForm"
-    );
+function validerFormulaire() {
+    effacerErreurs();
+
+    let valide = true;
+
+    const nom = nomInput.value.trim();
+    const prenom = prenomInput.value.trim();
+    const telephone = telephoneInput.value.trim();
+    const email = emailInput.value.trim();
+
+    if (nom === "") {
+        nomError.textContent = "Le nom est obligatoire.";
+        valide = false;
+    }
+
+    if (prenom === "") {
+        prenomError.textContent = "Le prénom est obligatoire.";
+        valide = false;
+    }
+
+    const chiffresTelephone = telephone.replace(/\D/g, "");
+
+    if (chiffresTelephone.length < 8) {
+        telephoneError.textContent =
+            "Entrez un numéro de téléphone valide.";
+        valide = false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+        emailError.textContent =
+            "Entrez une adresse email valide.";
+        valide = false;
+    }
+
+    return valide;
+}
 
 
-profileForm.addEventListener(
-    "submit",
-    function (event) {
+// ================= ACTUALISER L'EN-TÊTE =================
 
+function actualiserProfil(donnees) {
+    const nomComplet =
+        `${donnees.prenom} ${donnees.nom}`.trim();
+
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+
+    if (profileName) {
+        profileName.textContent = nomComplet;
+    }
+
+    if (profileEmail) {
+        profileEmail.textContent = donnees.email;
+    }
+
+    // Actualiser le nom dans le menu utilisateur.
+    const userButton = document.getElementById("userButton");
+
+    if (userButton) {
+        const textes = userButton.querySelectorAll("span");
+
+        if (textes.length >= 2) {
+            textes[1].textContent = nomComplet;
+        }
+
+        // Actualiser l'initiale affichée dans l'avatar.
+        if (textes.length >= 1) {
+            const initiale = (
+                donnees.prenom.charAt(0) ||
+                donnees.nom.charAt(0) ||
+                "C"
+            ).toUpperCase();
+
+            textes[0].textContent = initiale;
+        }
+    }
+
+    // Actualiser aussi l'avatar du profil.
+    const avatarProfil = document.querySelector(".profile-avatar");
+
+    if (avatarProfil) {
+        avatarProfil.textContent = (
+            donnees.prenom.charAt(0) ||
+            donnees.nom.charAt(0) ||
+            "C"
+        ).toUpperCase();
+    }
+}
+
+
+// ================= ENREGISTRER LE PROFIL =================
+
+if (profileForm) {
+    profileForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
-
-        // Supprimer les anciennes erreurs
-
-        document.getElementById(
-            "nomError"
-        ).textContent = "";
-
-        document.getElementById(
-            "prenomError"
-        ).textContent = "";
-
-        document.getElementById(
-            "telephoneError"
-        ).textContent = "";
-
-        document.getElementById(
-            "emailError"
-        ).textContent = "";
-
-
-        let valide = true;
-
-
-        // ================= NOM =================
-
-        if (nomInput.value.trim() === "") {
-
-            document.getElementById(
-                "nomError"
-            ).textContent =
-                "Le nom est obligatoire.";
-
-            valide = false;
-
-        }
-
-
-        // ================= PRÉNOM =================
-
-        if (prenomInput.value.trim() === "") {
-
-            document.getElementById(
-                "prenomError"
-            ).textContent =
-                "Le prénom est obligatoire.";
-
-            valide = false;
-
-        }
-
-
-        // ================= TÉLÉPHONE =================
-
-        if (
-            telephoneInput.value.trim() === "" ||
-            telephoneInput.value.trim().length < 8
-        ) {
-
-            document.getElementById(
-                "telephoneError"
-            ).textContent =
-                "Entrez un numéro de téléphone valide.";
-
-            valide = false;
-
-        }
-
-
-        // ================= EMAIL =================
-
-        const email =
-            emailInput.value.trim();
-
-
-        const emailRegex =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-        if (
-            email === "" ||
-            !emailRegex.test(email)
-        ) {
-
-            document.getElementById(
-                "emailError"
-            ).textContent =
-                "Entrez une adresse email valide.";
-
-            valide = false;
-
-        }
-
-
-        // ================= ENREGISTRER =================
-
-        if (!valide) {
-
+        if (!validerFormulaire()) {
             return;
-
         }
 
+        const texteOriginal = saveProfileButton.textContent;
 
-        // Modifier les données
+        saveProfileButton.disabled = true;
+        saveProfileButton.textContent = "Enregistrement...";
 
-        client.nom =
-            nomInput.value.trim();
+        const donnees = {
+            nom: nomInput.value.trim(),
+            prenom: prenomInput.value.trim(),
+            telephone: telephoneInput.value.trim(),
+            email: emailInput.value.trim(),
+            adresse: adresseInput.value.trim()
+        };
 
-        client.prenom =
-            prenomInput.value.trim();
+        try {
+            const reponse = await fetch("profil-api.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                credentials: "same-origin",
+                body: JSON.stringify(donnees)
+            });
 
-        client.telephone =
-            telephoneInput.value.trim();
+            const resultat = await lireReponse(reponse);
 
-        client.email =
-            emailInput.value.trim();
+            actualiserProfil(donnees);
 
-        client.adresse =
-            adresseInput.value.trim();
+            afficherMessage(
+                profileMessage,
+                resultat.message ||
+                    "Votre profil a été modifié avec succès.",
+                true
+            );
 
+        } catch (erreur) {
+            console.error("Erreur du profil :", erreur);
 
-        // Actualiser l'affichage
+            afficherMessage(
+                profileMessage,
+                erreur.message ||
+                    "Impossible d'enregistrer les modifications."
+            );
 
-        document.getElementById(
-            "profileName"
-        ).textContent =
-            client.prenom + " " + client.nom;
-
-
-        document.getElementById(
-            "profileEmail"
-        ).textContent =
-            client.email;
-
-
-        alert(
-            "Vos informations ont été modifiées avec succès."
-        );
-
-    }
-);
+        } finally {
+            saveProfileButton.disabled = false;
+            saveProfileButton.textContent = texteOriginal;
+        }
+    });
+}
 
 
 // ================= MOT DE PASSE =================
 
-document.getElementById(
-    "passwordButton"
-).addEventListener(
-    "click",
-    function () {
+const passwordButton = document.getElementById("passwordButton");
+const passwordFormContainer =
+    document.getElementById("passwordFormContainer");
+const passwordForm = document.getElementById("passwordForm");
+const passwordMessage = document.getElementById("passwordMessage");
 
-        alert(
-            "La modification du mot de passe sera disponible avec PHP/MySQL."
-        );
+const cancelPasswordButton =
+    document.getElementById("cancelPasswordButton");
 
-    }
-);
+const savePasswordButton =
+    document.getElementById("savePasswordButton");
 
+const ancienMotDePasseInput =
+    document.getElementById("ancienMotDePasse");
 
-// ================= 2FA =================
+const nouveauMotDePasseInput =
+    document.getElementById("nouveauMotDePasse");
 
-document.getElementById(
-    "twoFactorButton"
-).addEventListener(
-    "click",
-    function () {
-
-        alert(
-            "L'authentification à deux facteurs sera ajoutée dans la partie sécurité."
-        );
-
-    }
-);
+const confirmationMotDePasseInput =
+    document.getElementById("confirmationMotDePasse");
 
 
-// ================= SESSIONS =================
+// Ouvrir le formulaire.
+if (passwordButton && passwordFormContainer) {
+    passwordButton.addEventListener("click", function () {
+        passwordFormContainer.hidden = false;
+        passwordButton.setAttribute("aria-expanded", "true");
 
-document.getElementById(
-    "sessionsButton"
-).addEventListener(
-    "click",
-    function () {
+        masquerMessage(passwordMessage);
 
-        alert(
-            "La gestion des sessions sera disponible avec PHP/MySQL."
-        );
-
-    }
-);
+        ancienMotDePasseInput.focus();
+    });
+}
 
 
-// ================= NOTIFICATIONS =================
+// Fermer le formulaire.
+if (cancelPasswordButton && passwordFormContainer && passwordForm) {
+    cancelPasswordButton.addEventListener("click", function () {
+        passwordForm.reset();
 
-document.getElementById(
-    "notificationSwitch"
-).addEventListener(
-    "change",
-    function () {
+        passwordFormContainer.hidden = true;
+        passwordButton.setAttribute("aria-expanded", "false");
 
-        if (this.checked) {
+        masquerMessage(passwordMessage);
+    });
+}
 
-            console.log(
-                "Notifications activées"
+
+// Envoyer la demande de changement du mot de passe.
+if (passwordForm) {
+    passwordForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        masquerMessage(passwordMessage);
+
+        const ancienMotDePasse = ancienMotDePasseInput.value;
+        const nouveauMotDePasse = nouveauMotDePasseInput.value;
+        const confirmationMotDePasse =
+            confirmationMotDePasseInput.value;
+
+        if (nouveauMotDePasse.length < 8) {
+            afficherMessage(
+                passwordMessage,
+                "Le nouveau mot de passe doit contenir au moins 8 caractères."
             );
-
-        }
-        else {
-
-            console.log(
-                "Notifications désactivées"
-            );
-
-        }
-
-    }
-);
-
-
-// ================= EMAIL =================
-
-document.getElementById(
-    "emailSwitch"
-).addEventListener(
-    "change",
-    function () {
-
-        if (this.checked) {
-
-            console.log(
-                "Notifications email activées"
-            );
-
-        }
-        else {
-
-            console.log(
-                "Notifications email désactivées"
-            );
-
-        }
-
-    }
-);
-
-
-// ================= SUPPRESSION COMPTE =================
-
-document.getElementById(
-    "deleteAccountButton"
-).addEventListener(
-    "click",
-    function () {
-
-        const confirmation =
-            confirm(
-                "Attention ! Voulez-vous vraiment supprimer votre compte ?"
-            );
-
-
-        if (!confirmation) {
-
             return;
-
         }
 
+        if (nouveauMotDePasse.length > 72) {
+            afficherMessage(
+                passwordMessage,
+                "Le nouveau mot de passe est trop long."
+            );
+            return;
+        }
 
-        const deuxiemeConfirmation =
-            confirm(
-                "Cette action est définitive. Confirmer la suppression ?"
+        if (nouveauMotDePasse !== confirmationMotDePasse) {
+            afficherMessage(
+                passwordMessage,
+                "Les deux nouveaux mots de passe ne correspondent pas."
+            );
+            return;
+        }
+
+        if (nouveauMotDePasse === ancienMotDePasse) {
+            afficherMessage(
+                passwordMessage,
+                "Le nouveau mot de passe doit être différent de l'ancien."
+            );
+            return;
+        }
+
+        savePasswordButton.disabled = true;
+        savePasswordButton.textContent = "Modification en cours...";
+
+        try {
+            const reponse = await fetch("profil-api.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    action: "mot_de_passe",
+                    ancienMotDePasse: ancienMotDePasse,
+                    nouveauMotDePasse: nouveauMotDePasse,
+                    confirmationMotDePasse: confirmationMotDePasse
+                })
+            });
+
+            const resultat = await lireReponse(reponse);
+
+            afficherMessage(
+                passwordMessage,
+                resultat.message ||
+                    "Votre mot de passe a été modifié avec succès.",
+                true
             );
 
+            // Effacer les mots de passe des champs.
+            passwordForm.reset();
 
-        if (!deuxiemeConfirmation) {
+        } catch (erreur) {
+            console.error("Erreur changement de mot de passe :", erreur);
 
-            return;
+            afficherMessage(
+                passwordMessage,
+                erreur.message ||
+                    "Impossible de modifier le mot de passe."
+            );
 
+        } finally {
+            savePasswordButton.disabled = false;
+            savePasswordButton.textContent =
+                "Enregistrer le nouveau mot de passe";
         }
+    });
+}
 
 
+// ================= AUTHENTIFICATION À DEUX FACTEURS =================
+
+const twoFactorButton = document.getElementById("twoFactorButton");
+
+if (twoFactorButton) {
+    twoFactorButton.addEventListener("click", function () {
         alert(
-            "La suppression réelle du compte sera effectuée avec PHP/MySQL."
+            "L'authentification à deux facteurs n'est pas encore activée."
         );
+    });
+}
 
-    }
-);
+
+// ================= GESTION DES SESSIONS =================
+
+const sessionsButton = document.getElementById("sessionsButton");
+
+if (sessionsButton) {
+    sessionsButton.addEventListener("click", function () {
+        alert(
+            "La gestion des sessions sera ajoutée dans une prochaine étape."
+        );
+    });
+}
+
+
+// ================= PRÉFÉRENCES DE NOTIFICATION =================
+
+// Les préférences restent visuelles jusqu'à la mise en place
+// d'une API qui les enregistre dans MySQL.
+
+const notificationSwitch =
+    document.getElementById("notificationSwitch");
+
+const emailSwitch = document.getElementById("emailSwitch");
+
+if (notificationSwitch) {
+    notificationSwitch.addEventListener("change", function () {
+        console.log(
+            "Notifications :",
+            this.checked ? "activées" : "désactivées"
+        );
+    });
+}
+
+if (emailSwitch) {
+    emailSwitch.addEventListener("change", function () {
+        console.log(
+            "Notifications email :",
+            this.checked ? "activées" : "désactivées"
+        );
+    });
+}
+
+
+// ================= SUPPRESSION DU COMPTE =================
+
+// Aucun compte n'est supprimé par ce bouton pour le moment.
+
+const deleteAccountButton =
+    document.getElementById("deleteAccountButton");
+
+if (deleteAccountButton) {
+    deleteAccountButton.addEventListener("click", function () {
+        alert(
+            "La suppression du compte n'est pas encore disponible. " +
+            "Aucune donnée n'a été supprimée."
+        );
+    });
+}
 
 
 // ================= MENU UTILISATEUR =================
 
-const userButton =
-    document.getElementById(
-        "userButton"
-    );
+const userButton = document.getElementById("userButton");
+const userMenu = document.getElementById("userMenu");
 
-const userMenu =
-    document.getElementById(
-        "userMenu"
-    );
+if (userButton && userMenu) {
+    userButton.addEventListener("click", function (event) {
+        event.stopPropagation();
 
+        const ouvert = userMenu.classList.toggle("active");
 
-userButton.addEventListener(
-    "click",
-    function () {
+        userButton.setAttribute("aria-expanded", String(ouvert));
+    });
 
-        userMenu.classList.toggle(
-            "active"
-        );
-
-    }
-);
-
-
-// Fermer le menu en cliquant ailleurs
-
-document.addEventListener(
-    "click",
-    function (event) {
-
+    document.addEventListener("click", function (event) {
         if (
-            !userButton.contains(event.target)
-            &&
+            !userButton.contains(event.target) &&
             !userMenu.contains(event.target)
         ) {
-
-            userMenu.classList.remove(
-                "active"
-            );
-
+            userMenu.classList.remove("active");
+            userButton.setAttribute("aria-expanded", "false");
         }
-
-    }
-);
-
-
-// ================= DÉCONNEXION =================
-
-document.getElementById(
-    "logoutButton"
-).addEventListener(
-    "click",
-    function () {
-
-        const confirmation =
-            confirm(
-                "Voulez-vous vraiment vous déconnecter ?"
-            );
-
-
-        if (confirmation) {
-
-            window.location.href =
-                "../index.html";
-
-        }
-
-    }
-);
+    });
+}

@@ -74,16 +74,36 @@ verifierAcces("admin", "../login.html");
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <span>Activités</span>
             </a>
+			
+			 <a href="chat.php" class="menu-link">
+                   <i class="fa-solid fa-comments"></i>
+                    <span>Message</span>
+                </a>
 
             <a href="profil.php">
                 <i class="fa-solid fa-user"></i>
                 <span>Mon profil</span>
+            </a>
+			
+			 <a href="historique-connexions.php" class="menu-link">
+                   <i class="fa-solid fa-shield-halved"></i>
+                    <span>Historique connexion</span>
+                </a>
+				
+				 <a href="documents.php" class="menu-link">
+                <i class="fa-solid fa-folder-open"></i>
+                Documents
             </a>
 
             <a href="parametres.php" class="active">
                 <i class="fa-solid fa-gear"></i>
                 <span>Paramètres</span>
             </a>
+			
+			<a href="archives.php" class="menu-link">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>Archives</span>
+                </a>
 
         </nav>
 
@@ -132,14 +152,16 @@ verifierAcces("admin", "../login.html");
 
                 <div class="header-profile">
 
-                    <div class="header-avatar">
-                        A
-                    </div>
+                
+                <div class="header-avatar" id="headerAvatar">
+                             A
+                </div>
 
-                    <div>
-                        <strong>Administrateur</strong>
-                        <span>Administrateur</span>
-                    </div>
+                <div class="header-admin-text">
+                         <strong id="headerAdminName">Chargement...</strong>
+                        <span id="headerAdminRole">Chargement...</span>
+                </div>
+
 
                 </div>
 
@@ -633,6 +655,7 @@ verifierAcces("admin", "../login.html");
      <script src="notification-badge.js"></script>
      <script src="theme.js"></script>
     <script src="parametres.js"></script>
+	<script src="header-admin.js"></script>
 
 </body>
 </html>

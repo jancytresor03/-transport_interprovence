@@ -1,4 +1,4 @@
-
+```php
 <?php
 
 /* =========================================
@@ -262,10 +262,10 @@ sort($sieges);
 try {
     $pdo->beginTransaction();
 
-    /* Vérifier le trajet et le verrouiller */
+    /* Vérifier le trajet et verrouiller sa ligne */
 
     $sqlTrajet = "
-        SELECT trajet_id, date_depart, heure_depart, prix, statut
+        SELECT *
         FROM trajets
         WHERE trajet_id = ?
         FOR UPDATE
@@ -280,7 +280,7 @@ try {
         throw new Exception("Le trajet demandé n'existe pas.");
     }
 
-    if ($trajet["statut"] !== "actif") {
+    if (($trajet["statut"] ?? "") !== "actif") {
         throw new Exception("Ce trajet n'est plus disponible.");
     }
 
@@ -301,6 +301,14 @@ try {
     }
 
     $montantTotal = round($prixUnitaire * $passagers, 2);
+
+    /*
+       IMPORTANT :
+       Adapter ces deux clés si les noms réels des colonnes
+       de ta table trajets sont différents.
+    */
+    $depart = $trajet["depart"] ?? "";
+    $destination = $trajet["destination"] ?? "";
 
     /* Vérifier le client */
 
@@ -355,10 +363,8 @@ try {
 
     /* =========================================
        7. INSERER LA RESERVATION
-       Le trigger génère les identifiants.
     ========================================= */
 
-    // Réinitialiser les variables de cette session MySQL.
     $pdo->exec("SET @generated_reservation_id = NULL");
     $pdo->exec("SET @generated_reference = NULL");
 
@@ -407,7 +413,7 @@ try {
         $dateExpiration
     ]);
 
-    /* Récupérer les valeurs exactes générées par le trigger */
+    /* Récupérer les identifiants générés par le trigger */
 
     $stmtIds = $pdo->query("
         SELECT
@@ -420,17 +426,11 @@ try {
     $reservationId = $identifiants["reservation_id"] ?? null;
     $reference = $identifiants["reference"] ?? null;
 
-    if (
-        !$reservationId ||
-        !$reference
-    ) {
+    if (!$reservationId || !$reference) {
         throw new Exception(
             "Le trigger MySQL n'a pas retourné les identifiants."
         );
     }
-
-    error_log("ID réservation généré : " . $reservationId);
-    error_log("Référence générée : " . $reference);
 
     /* =========================================
        8. ASSOCIER LES SIEGES
@@ -469,6 +469,51 @@ try {
 
     $pdo->commit();
 
+    /* =========================================
+       10. ENVOYER L'EMAIL APRES LE COMMIT
+       L'échec d'un email ne doit pas annuler
+       une réservation déjà enregistrée.
+    ========================================= */
+
+    try {
+        require_once __DIR__ . "/../envoyer-notification-reservation.php";
+
+        $donneesReservation = [
+            "reference" => $reference,
+            "depart" => $depart,
+            "destination" => $destination,
+            "date_depart" => $trajet["date_depart"],
+            "heure_depart" => $trajet["heure_depart"],
+            "nombre_passagers" => $passagers,
+            "montant_total" => $montantTotal,
+            "statut" => "En attente de confirmation"
+        ];
+
+        $emailEnvoye = envoyerNotificationReservation(
+            $email,
+            $prenom . " " . $nom,
+            $donneesReservation
+        );
+
+        if (!$emailEnvoye) {
+            error_log(
+                "Réservation " . $reference
+                . " enregistrée, mais l'email n'a pas pu être envoyé."
+            );
+        }
+
+    } catch (Throwable $erreurEmail) {
+        error_log(
+            "Erreur notification réservation "
+            . $reference . " : "
+            . $erreurEmail->getMessage()
+        );
+    }
+
+    /* =========================================
+       11. REDIRECTION
+    ========================================= */
+
     header(
         "Location: confirmation.php?"
         . http_build_query(["reference" => $reference])
@@ -499,3 +544,4 @@ try {
     );
 }
 ?>
+```

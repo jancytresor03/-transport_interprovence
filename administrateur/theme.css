@@ -379,3 +379,74 @@ textarea {
         color 0.25s ease,
         border-color 0.25s ease;
 }
+
+
+/* =========================================
+   CORRECTION GLOBALE DU MODE SOMBRE
+========================================= */
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+/* Zones principales */
+body.dark-mode main,
+body.dark-mode .main-content,
+body.dark-mode .content,
+body.dark-mode .page-content,
+body.dark-mode .container {
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+/* Conteneurs et panneaux */
+body.dark-mode section,
+body.dark-mode .panel,
+body.dark-mode .widget,
+body.dark-mode .info-card,
+body.dark-mode .form-container {
+    background-color: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+/* Textes généraux */
+body.dark-mode label,
+body.dark-mode td,
+body.dark-mode li,
+body.dark-mode .form-label,
+body.dark-mode .text-muted {
+    color: var(--text-muted);
+}
+
+/* Liens */
+body.dark-mode a {
+    color: var(--primary-light);
+}
+
+/* Champs de formulaire */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: var(--surface);
+    color: var(--text);
+    border-color: var(--border-strong);
+}
+
+/* Tableaux */
+body.dark-mode table {
+    background-color: var(--surface);
+}
+
+body.dark-mode tbody tr {
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+/* Éléments qui utilisent les variables du thème */
+body.dark-mode .bg-white,
+body.dark-mode .background-white {
+    background-color: var(--surface);
+    color: var(--text);
+}

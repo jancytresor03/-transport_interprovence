@@ -306,7 +306,7 @@ $donneesReservation = [
                 <a href="mes-reservations.php">
                     Mes réservations
                 </a>
-
+                <a href="chat.php">message</a>
             </nav>
 
             <div class="user-area">
@@ -833,6 +833,7 @@ $donneesReservation = [
     </script>
 
     <script src="reservation.js"></script>
+	<script src="deconnexion-auto.js"></script>
 
 </body>
 

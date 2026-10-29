@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Réinitialiser le mot de passe - Burundi Transport</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e2a36;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #2c6e9b;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        p {
+            color: #5f7080;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 6px;
+            background: #2c6e9b;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .retour {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #2c6e9b;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Nouveau mot de passe</h1>
+
+        <p>
+            Choisissez un nouveau mot de passe pour votre compte
+            Burundi Transport.
+        </p>
+
+        <form id="resetForm">
+            <label for="password">Nouveau mot de passe</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                minlength="8"
+                autocomplete="new-password"
+                required
+                placeholder="Au moins 8 caractères"
+            >
+
+            <label for="confirmPassword">
+                Confirmer le mot de passe
+            </label>
+            <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                minlength="8"
+                autocomplete="new-password"
+                required
+                placeholder="Saisissez le même mot de passe"
+            >
+
+            <button type="submit" id="submitButton">
+                Enregistrer le nouveau mot de passe
+            </button>
+
+            <p id="message" role="status" aria-live="polite"></p>
+        </form>
+
+        <a class="retour" href="login.html">
+            Retour à la connexion
+        </a>
+    </main>
+
+    <script src="reinitialiser-mot-de-passe.js"></script>
+</body>
+</html>

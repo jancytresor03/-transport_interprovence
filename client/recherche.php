@@ -39,6 +39,7 @@ verifierAcces("client", "../login.html");
             <a href="mes-reservations.php">
                 Mes réservations
             </a>
+			<a href="chat.php">message</a>
 
         </nav>
 
@@ -423,6 +424,7 @@ verifierAcces("client", "../login.html");
 
 
     <script src="recherche.js"></script>
+	<script src="deconnexion-auto.js"></script>
 
 </body>
 

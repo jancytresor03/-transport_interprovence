@@ -122,6 +122,11 @@ verifierAcces("admin", "../login.html");
                 <span>Activités</span>
 
             </a>
+			
+			 <a href="chat.php" class="menu-link">
+                   <i class="fa-solid fa-comments"></i>
+                    <span>Message</span>
+                </a>
 
 
             <a href="profil.php">
@@ -130,6 +135,16 @@ verifierAcces("admin", "../login.html");
 
                 <span>Mon profil</span>
 
+            </a>
+			
+			 <a href="historique-connexions.php" class="menu-link">
+                   <i class="fa-solid fa-shield-halved"></i>
+                    <span>Historique connexion</span>
+                </a>
+				
+				 <a href="documents.php" class="menu-link">
+                <i class="fa-solid fa-folder-open"></i>
+                Documents
             </a>
 
 
@@ -140,6 +155,11 @@ verifierAcces("admin", "../login.html");
                 <span>Paramètres</span>
 
             </a>
+			
+			<a href="archives.php" class="menu-link">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>Archives</span>
+                </a>
 
 
         </nav>
@@ -224,18 +244,14 @@ verifierAcces("admin", "../login.html");
 
                 <div class="header-admin">
 
-                    <div class="admin-avatar">
-                        A
-                    </div>
+                  <div class="admin-avatar" id="sidebarAvatar">
+    A
+</div>
 
-
-                    <div>
-
-                        <strong>Administrateur</strong>
-
-                        <small>Administrateur</small>
-
-                    </div>
+<div>
+    <strong id="sidebarName">Chargement...</strong>
+    <small id="sidebarRole">Chargement...</small>
+</div>
 
                 </div>
 
@@ -250,6 +266,229 @@ verifierAcces("admin", "../login.html");
         ========================== -->
 
         <section class="page-content">
+
+
+
+<!-- OUTILS DES RAPPORTS -->
+
+<div class="report-toolbar">
+
+    <div class="report-toolbar-heading">
+        <div>
+            <span class="section-label">OUTILS DE GESTION</span>
+            <h2>Rapports et analyses</h2>
+            <p>Générez, imprimez et analysez les données de Burundi Transport.</p>
+        </div>
+    </div>
+
+    <div class="report-buttons">
+
+        <button type="button" id="printReportButton" class="report-btn report-pdf">
+            <i class="fa-solid fa-file-pdf"></i>
+            Télécharger PDF / Imprimer
+        </button>
+
+        <button type="button" id="exportExcelButton" class="report-btn report-excel">
+            <i class="fa-solid fa-file-excel"></i>
+            Exporter Excel
+        </button>
+
+        <button type="button" id="periodicReportButton" class="report-btn">
+            <i class="fa-solid fa-calendar-days"></i>
+            Rapports périodiques
+        </button>
+
+        <button type="button" id="customReportButton" class="report-btn">
+            <i class="fa-solid fa-sliders"></i>
+            Rapport personnalisé
+        </button>
+
+        <button type="button" id="comparisonButton" class="report-btn">
+            <i class="fa-solid fa-chart-column"></i>
+            Analyse comparative
+        </button>
+		
+		
+<section id="comparisonPanel" class="table-card" hidden>
+    <h3>Analyse comparative</h3>
+    <p>Comparez les statistiques de deux périodes.</p>
+
+    <div class="report-filters">
+        <div class="report-field">
+            <label for="comparisonStart1">Début de la première période</label>
+            <input type="date" id="comparisonStart1">
+        </div>
+
+        <div class="report-field">
+            <label for="comparisonEnd1">Fin de la première période</label>
+            <input type="date" id="comparisonEnd1">
+        </div>
+
+        <div class="report-field">
+            <label for="comparisonStart2">Début de la deuxième période</label>
+            <input type="date" id="comparisonStart2">
+        </div>
+
+        <div class="report-field">
+            <label for="comparisonEnd2">Fin de la deuxième période</label>
+            <input type="date" id="comparisonEnd2">
+        </div>
+    </div>
+
+    <p id="comparisonMessage" role="status"></p>
+
+    <button type="button" id="runComparisonButton" class="report-btn">
+        Comparer les périodes
+    </button>
+
+    <div id="comparisonResults" hidden>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Indicateur</th>
+                        <th>Première période</th>
+                        <th>Deuxième période</th>
+                        <th>Différence</th>
+                        <th>Évolution (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonResultsBody"></tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="comparisonChart"></canvas>
+        </div>
+    </div>
+</section>
+
+
+        <button type="button" id="forecastButton" class="report-btn">
+            <i class="fa-solid fa-chart-line"></i>
+            Prévisions statistiques
+        </button>
+
+
+<section id="forecastPanel" class="table-card" hidden>
+    <h3>Prévisions statistiques</h3>
+
+    <label for="forecastMonths">Nombre de mois à prévoir</label>
+    <select id="forecastMonths">
+        <option value="3">3 mois</option>
+        <option value="6">6 mois</option>
+        <option value="12">12 mois</option>
+    </select>
+
+    <p id="forecastMessage" role="status"></p>
+
+    <button type="button" id="runForecastButton" class="report-btn">
+        Calculer les prévisions
+    </button>
+
+    <div id="forecastResults" hidden>
+        <div class="chart-container">
+            <canvas id="forecastReservationsChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="forecastRevenueChart"></canvas>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mois prévu</th>
+                    <th>Réservations estimées</th>
+                    <th>Revenus estimés (BIF)</th>
+                </tr>
+            </thead>
+            <tbody id="forecastResultsBody"></tbody>
+        </table>
+    </div>
+</section>
+
+
+    </div>
+
+  
+<div id="reportControls" class="report-controls" hidden>
+
+    <h3 id="reportControlsTitle">Rapport personnalisé</h3>
+
+    <div class="report-filters">
+
+        <!-- TYPE DE RAPPORT -->
+        <div class="report-field">
+            <label for="reportType">Type de rapport</label>
+
+            <select id="reportType">
+                <option value="trajets">Rapport des trajets</option>
+                <option value="reservations">Rapport des réservations</option>
+                <option value="revenus">Rapport des revenus</option>
+                <option value="utilisateurs">Rapport des utilisateurs</option>
+                <option value="complet">Rapport complet</option>
+            </select>
+        </div>
+
+        <!-- DATE DE DEBUT -->
+        <div class="report-field">
+            <label for="reportStartDate">Date de début (facultative)</label>
+            <input type="date" id="reportStartDate">
+        </div>
+
+        <!-- DATE DE FIN -->
+        <div class="report-field">
+            <label for="reportEndDate">Date de fin (facultative)</label>
+            <input type="date" id="reportEndDate">
+        </div>
+
+    </div>
+
+    <p id="reportMessage" role="status"></p>
+
+    <button type="button" id="applyReportButton" class="report-btn report-pdf">
+        <i class="fa-solid fa-check"></i>
+        Générer le rapport
+    </button>
+
+</div>
+<div id="reportResults" class="table-card" hidden>
+    <div class="table-header">
+        <div>
+            <h3 id="reportResultsTitle">Résultat du rapport</h3>
+            <p id="reportResultsDescription"></p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead id="reportResultsHead"></thead>
+            <tbody id="reportResultsBody"></tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+        <p id="reportMessage" role="status"></p>
+
+        <button type="button" id="applyReportButton" class="report-btn report-pdf">
+            <i class="fa-solid fa-check"></i>
+            Appliquer
+        </button>
+
+    </div>
+
+</div>
+
+
+
 
 
             <!-- TITRE -->
@@ -720,6 +959,7 @@ verifierAcces("admin", "../login.html");
     <script src="notification-badge.js"></script>
     <script src="theme.js"></script>
     <script src="statistiques.js"></script>
+	<script src="header-admin.js"></script>
 
 </body>
 

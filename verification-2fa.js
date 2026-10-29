@@ -9,7 +9,6 @@ const codeError = document.getElementById("codeError");
 const message = document.getElementById("message");
 const verifyButton = document.getElementById("verifyButton");
 
-
 /* =========================
    AFFICHER UN MESSAGE
 ========================= */
@@ -19,7 +18,6 @@ function afficherMessage(texte, type) {
     message.className = "message " + type;
     message.hidden = false;
 }
-
 
 /* =========================
    EFFACER LES ERREURS
@@ -34,8 +32,11 @@ function effacerErreurs() {
     message.className = "message";
 }
 
+/* =========================
+   LIMITER LA SAISIE A 6 CHIFFRES
+========================= */
+
 codeInput.addEventListener("input", function () {
-    // Conserver uniquement les chiffres.
     codeInput.value = codeInput.value
         .replace(/\D/g, "")
         .slice(0, 6);
@@ -44,9 +45,8 @@ codeInput.addEventListener("input", function () {
     codeInput.classList.remove("input-error");
 });
 
-
 /* =========================
-   ENVOYER LE CODE AU SERVEUR
+   VERIFIER LE CODE 2FA
 ========================= */
 
 verificationForm.addEventListener("submit", async function (event) {
@@ -56,7 +56,8 @@ verificationForm.addEventListener("submit", async function (event) {
 
     const code = codeInput.value.trim();
 
-    // Vérifier le format du code.
+    /* Vérifier le format du code */
+
     if (!/^\d{6}$/.test(code)) {
         codeError.textContent =
             "Veuillez saisir un code composé de 6 chiffres.";
@@ -67,12 +68,18 @@ verificationForm.addEventListener("submit", async function (event) {
         return;
     }
 
+    /* Désactiver le bouton pendant la vérification */
+
     verifyButton.disabled = true;
     verifyButton.textContent = "Vérification en cours...";
 
     try {
+        /* Préparer les données */
+
         const donnees = new FormData();
         donnees.append("code", code);
+
+        /* Envoyer le code au serveur PHP */
 
         const reponse = await fetch("verifier-code-2fa.php", {
             method: "POST",
@@ -83,15 +90,31 @@ verificationForm.addEventListener("submit", async function (event) {
             }
         });
 
+        /* Lire la réponse UNE SEULE FOIS */
+
+        const texteReponse = await reponse.text();
+
+        console.log("Statut HTTP :", reponse.status);
+        console.log("Réponse brute du serveur :", texteReponse);
+
+        /* Convertir la réponse en JSON */
+
         let resultat;
 
         try {
-            resultat = await reponse.json();
-        } catch {
+            resultat = JSON.parse(texteReponse);
+        } catch (erreur) {
+            console.error(
+                "Réponse JSON invalide :",
+                texteReponse
+            );
+
             throw new Error(
                 "Le serveur a retourné une réponse invalide."
             );
         }
+
+        /* Vérifier le résultat */
 
         if (!reponse.ok || !resultat.succes) {
             afficherMessage(
@@ -99,16 +122,18 @@ verificationForm.addEventListener("submit", async function (event) {
                 "error"
             );
 
-            // Ne pas permettre de continuer si la session 2FA
-            // a expiré ou si les tentatives sont épuisées.
+            /* Session expirée ou trop de tentatives */
+
             if (
                 reponse.status === 401 ||
                 reponse.status === 429
             ) {
-                verifyButton.disabled = true;
                 codeInput.disabled = true;
+                verifyButton.disabled = true;
                 return;
             }
+
+            /* Autoriser une nouvelle tentative */
 
             codeInput.classList.add("input-error");
             codeInput.value = "";
@@ -117,10 +142,14 @@ verificationForm.addEventListener("submit", async function (event) {
             return;
         }
 
+        /* Vérification réussie */
+
         afficherMessage(
             resultat.message || "Vérification réussie.",
             "success"
         );
+
+        /* Rediriger selon le rôle */
 
         if (resultat.role === "admin") {
             window.location.href =
@@ -141,11 +170,14 @@ verificationForm.addEventListener("submit", async function (event) {
         console.error("Erreur 2FA :", erreur);
 
         afficherMessage(
-            "Impossible de contacter le serveur. Vérifiez que XAMPP est démarré.",
+            erreur.message ||
+            "Une erreur est survenue pendant la vérification.",
             "error"
         );
 
     } finally {
+        /* Réactiver le bouton si une nouvelle tentative est possible */
+
         if (!verifyButton.disabled) {
             verifyButton.textContent = "Vérifier le code";
         }

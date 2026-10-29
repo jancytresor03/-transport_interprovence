@@ -71,16 +71,36 @@ verifierAcces("admin", "../login.html");
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <span>Activités</span>
             </a>
+			
+			 <a href="chat.php" class="menu-link">
+                   <i class="fa-solid fa-comments"></i>
+                    <span>Message</span>
+                </a>
 
             <a href="profil.php">
                 <i class="fa-solid fa-user"></i>
                 <span>Mon profil</span>
+            </a>
+			
+			 <a href="historique-connexions.php" class="menu-link">
+                   <i class="fa-solid fa-shield-halved"></i>
+                    <span>Historique connexion</span>
+                </a>
+				
+				 <a href="documents.php" class="menu-link">
+                <i class="fa-solid fa-folder-open"></i>
+                Documents
             </a>
 
             <a href="parametres.php">
                 <i class="fa-solid fa-gear"></i>
                 <span>Paramètres</span>
             </a>
+			
+			<a href="archives.php" class="menu-link">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>Archives</span>
+                </a>
         </nav>
 
         <div class="sidebar-bottom">
@@ -123,12 +143,12 @@ verifierAcces("admin", "../login.html");
                 </a>
 
                 <div class="header-admin">
-                    <div class="admin-avatar">A</div>
+                    <div class="admin-avatar" id="sidebarAvatar">A</div>
 
-                    <div>
-                        <strong>Administrateur</strong>
-                        <small>Administrateur</small>
-                    </div>
+<div>
+    <strong id="sidebarName">Chargement...</strong>
+    <small id="sidebarRole">Chargement...</small>
+</div>
                 </div>
 
             </div>
@@ -443,6 +463,7 @@ verifierAcces("admin", "../login.html");
     <script src="notification-badge.js"></script>
     <script src="theme.js"></script>
     <script src="utilisateurs.js"></script>
+	<script src="header-admin.js"></script>
 
 </body>
 </html>

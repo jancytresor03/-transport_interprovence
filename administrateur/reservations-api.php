@@ -11,9 +11,11 @@ require_once __DIR__ . "/../database.php";
 
 /* =========================================
    RÉPONSE JSON
-   Le format reservations est conservé
-   pour rester compatible avec reservations.js.
 ========================================= */
+
+
+
+
 
 function repondreReservations(
     bool $succes,
@@ -21,6 +23,7 @@ function repondreReservations(
     $reservations = null,
     int $code = 200
 ): void {
+
     http_response_code($code);
 
     echo json_encode([
@@ -143,6 +146,7 @@ try {
     ===================================== */
 
     if ($methode !== "POST") {
+
         repondreReservations(
             false,
             "Méthode non autorisée.",
@@ -159,6 +163,7 @@ try {
     $donnees = json_decode($contenu, true);
 
     if (!is_array($donnees)) {
+
         repondreReservations(
             false,
             "Les données envoyées sont invalides.",
@@ -180,6 +185,7 @@ try {
         !is_string($statut) ||
         !in_array($statut, $statutsAutorises, true)
     ) {
+
         repondreReservations(
             false,
             "Identifiant ou statut invalide.",
@@ -195,6 +201,7 @@ try {
     $adminId = (string) ($_SESSION["user_id"] ?? "");
 
     if ($adminId === "") {
+
         repondreReservations(
             false,
             "Session administrateur invalide.",
@@ -204,6 +211,7 @@ try {
     }
 
     // Transmettre l'administrateur aux déclencheurs SQL.
+
     $requeteUser = $pdo->prepare(
         "SET @user_id_connecte = ?"
     );
@@ -225,7 +233,10 @@ try {
             reservation_id,
             reference,
             user_id,
-            statut
+            statut,
+            email_passager,
+            nom_passager,
+            prenom_passager
         FROM reservations
         WHERE reservation_id = ?
         FOR UPDATE
@@ -238,6 +249,7 @@ try {
     );
 
     if (!$reservation) {
+
         $pdo->rollBack();
 
         repondreReservations(
@@ -253,6 +265,7 @@ try {
     ===================================== */
 
     if ($reservation["statut"] === "annulee") {
+
         $pdo->rollBack();
 
         repondreReservations(
@@ -267,6 +280,7 @@ try {
         $statut === "confirmee" &&
         $reservation["statut"] !== "en_attente"
     ) {
+
         $pdo->rollBack();
 
         repondreReservations(
@@ -284,6 +298,7 @@ try {
     $clientId = (string) ($reservation["user_id"] ?? "");
 
     if ($clientId === "") {
+
         $pdo->rollBack();
 
         repondreReservations(
@@ -349,11 +364,81 @@ try {
 
     $pdo->commit();
 
+    /* =====================================
+       13. ENVOYER L'E-MAIL AU CLIENT
+       L'e-mail est envoyé après le commit.
+    ===================================== */
+
+    $emailEnvoye = false;
+
+    try {
+
+        require_once __DIR__
+            . "/../envoyer-email-statut-reservation.php";
+
+        $emailClient = trim(
+            (string) ($reservation["email_passager"] ?? "")
+        );
+
+        $nomClient = trim(
+            ($reservation["prenom_passager"] ?? "")
+            . " "
+            . ($reservation["nom_passager"] ?? "")
+        );
+
+        if (
+            $emailClient !== "" &&
+            filter_var(
+                $emailClient,
+                FILTER_VALIDATE_EMAIL
+            )
+        ) {
+
+            $emailEnvoye = envoyerEmailStatutReservation(
+                $emailClient,
+                $nomClient,
+                (string) $reservation["reference"],
+                $statut
+            );
+
+        } else {
+
+            error_log(
+                "Adresse e-mail invalide pour la réservation "
+                . $reservation["reference"]
+            );
+        }
+
+    } catch (Throwable $erreurEmail) {
+
+        error_log(
+            "Erreur d'envoi d'e-mail pour la réservation "
+            . $reservation["reference"]
+            . " : "
+            . $erreurEmail->getMessage()
+        );
+    }
+
+    /* =====================================
+       14. RÉPONDRE À L'INTERFACE
+    ===================================== */
+
+    if ($statut === "confirmee") {
+
+        $messageReponse = $emailEnvoye
+            ? "Réservation confirmée. Notification enregistrée et e-mail envoyé."
+            : "Réservation confirmée. Notification enregistrée, mais l'e-mail n'a pas pu être envoyé.";
+
+    } else {
+
+        $messageReponse = $emailEnvoye
+            ? "Réservation annulée. Notification enregistrée et e-mail envoyé."
+            : "Réservation annulée. Notification enregistrée, mais l'e-mail n'a pas pu être envoyé.";
+    }
+
     repondreReservations(
         true,
-        $statut === "confirmee"
-            ? "Réservation confirmée et client notifié."
-            : "Réservation annulée et client notifié."
+        $messageReponse
     );
 
 } catch (Throwable $erreur) {

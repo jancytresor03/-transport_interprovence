@@ -138,6 +138,11 @@ verifierAcces("admin", "../login.html");
                 <span>Activités</span>
 
             </a>
+			
+			 <a href="chat.php" class="nav-link">
+                   <i class="fa-solid fa-comments"></i>
+                    <span>Message</span>
+                </a>
 
 
             <p class="nav-title">
@@ -153,6 +158,16 @@ verifierAcces("admin", "../login.html");
                 <span>Mon profil</span>
 
             </a>
+			
+			 <a href="historique-connexions.php" class="nav-link">
+                   <i class="fa-solid fa-shield-halved"></i>
+                    <span>Historique connexion</span>
+                </a>
+				
+				 <a href="documents.php" class="nav-link">
+                <i class="fa-solid fa-folder-open"></i>
+                Documents
+            </a>
 
 
             <a href="parametres.php"
@@ -163,6 +178,11 @@ verifierAcces("admin", "../login.html");
                 <span>Paramètres</span>
 
             </a>
+			
+			<a href="archives.php" class="nav-link">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>Archives</span>
+                </a>
 
         </nav>
 
@@ -956,6 +976,7 @@ verifierAcces("admin", "../login.html");
 	<script src="notification-badge.js"></script>
     <script src="theme.js"></script>
     <script src="profil.js"></script>
+	<script src="header-admin.js"></script>
 
 </body>
 
